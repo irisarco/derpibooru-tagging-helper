@@ -34,7 +34,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <Combobox.Options className="absolute left-0 top-0 mt-8 max-w-xs whitespace-nowrap bg-[#546c99] text-[13px]">
+      <Combobox.Options className="absolute left-0 top-0 z-10 mt-8 max-w-xs whitespace-nowrap bg-[#546c99] text-[13px]">
         {query.length > 0 && (
           <Combobox.Option
             value={query}
