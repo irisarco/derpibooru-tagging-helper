@@ -7,6 +7,8 @@ import { TagInput } from "./components/tag-input";
 import { Frame } from "./components/frame";
 import { Description } from "./components/description";
 
+export const runtime = "edge";
+
 const getRelatedTags = async (tags: string[]): Promise<string[]> => {
   const url = new URL("https://derpibooru.org/api/v1/json/search/images");
   url.search = new URLSearchParams({
