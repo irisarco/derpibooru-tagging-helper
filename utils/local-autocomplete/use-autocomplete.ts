@@ -11,7 +11,7 @@ export const useAutocomplete = (prefix: string | undefined) => {
 
     fetch(
       `https://derpibooru.org/autocomplete/compiled?vsn=2&key=${cacheKey}`,
-      { credentials: "omit", cache: "force-cache" }
+      { credentials: "omit", cache: "force-cache" },
     )
       .then((resp) => resp.arrayBuffer())
       .then((buf) => setAutocompleter(new LocalAutocompleter(buf)));

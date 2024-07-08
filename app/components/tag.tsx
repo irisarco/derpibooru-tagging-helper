@@ -20,7 +20,7 @@ export const Tag: React.FC<TagProps> = ({
       className={clsx(
         "border border-[#2d6236] bg-[#1b3c21] p-5px text-sm font-bold leading-[1.15] text-[#4aa158]",
         onClick && "cursor-pointer",
-        disabled && "opacity-50"
+        disabled && "opacity-50",
       )}
     >
       {name}

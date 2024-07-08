@@ -1,10 +1,6 @@
 const { withPlausibleProxy } = require("next-plausible");
 
 /** @type {import('next').NextConfig} */
-const nextConfig = withPlausibleProxy()({
-  experimental: {
-    appDir: true,
-  },
-});
+const nextConfig = withPlausibleProxy()({});
 
 module.exports = nextConfig;

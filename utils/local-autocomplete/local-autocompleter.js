@@ -59,14 +59,14 @@ export class LocalAutocompleter {
     /** @type {number} */
     this.referenceStart = this.view.getUint32(
       backingStore.byteLength - 8,
-      true
+      true,
     );
     /** @type {number} */
     this.secondaryStart = this.referenceStart + 8 * this.numTags;
     /** @type {number} */
     this.formatVersion = this.view.getUint32(
       backingStore.byteLength - 12,
-      true
+      true,
     );
 
     if (this.formatVersion !== 2) {
@@ -87,12 +87,12 @@ export class LocalAutocompleter {
     /** @type {number[]} */
     const associations = [];
     const name = this.decoder.decode(
-      this.data.slice(location + 1, location + nameLength + 1)
+      this.data.slice(location + 1, location + nameLength + 1),
     );
 
     for (let i = 0; i < assnLength; i++) {
       associations.push(
-        this.view.getUint32(location + 1 + nameLength + 1 + i * 4, true)
+        this.view.getUint32(location + 1 + nameLength + 1 + i * 4, true),
       );
     }
 
@@ -109,7 +109,7 @@ export class LocalAutocompleter {
     const nameLocation = this.view.getUint32(this.referenceStart + i * 8, true);
     const imageCount = this.view.getInt32(
       this.referenceStart + i * 8 + 4,
-      true
+      true,
     );
     const [name, associations] = this.getTagFromLocation(nameLocation);
 
@@ -130,7 +130,7 @@ export class LocalAutocompleter {
   getSecondaryResultAt(i) {
     const referenceIndex = this.view.getUint32(
       this.secondaryStart + i * 4,
-      true
+      true,
     );
     return this.getResultAt(referenceIndex);
   }
@@ -196,12 +196,12 @@ export class LocalAutocompleter {
     this.scanResults(
       this.getSecondaryResultAt.bind(this),
       namespaceMatch,
-      results
+      results,
     );
 
     // Sort results by image count
     const sorted = Object.values(results).sort(
-      (a, b) => b.imageCount - a.imageCount
+      (a, b) => b.imageCount - a.imageCount,
     );
 
     return sorted.slice(0, k);

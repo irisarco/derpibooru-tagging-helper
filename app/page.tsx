@@ -14,7 +14,7 @@ const getRelatedTags = async (tags: string[]): Promise<string[]> => {
   url.search = new URLSearchParams({
     q: clsx(
       tags.length && `(${tags.join(" || ")}),`,
-      "score.gt:50, first_seen_at.lt:2 days ago"
+      "score.gt:50, first_seen_at.lt:2 days ago",
     ),
     filter_id: "56027", // Everything
     sf: "_score",

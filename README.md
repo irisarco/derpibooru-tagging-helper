@@ -16,5 +16,4 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-
 This project uses some code from original [philomena](https://github.com/derpibooru/philomena) project.

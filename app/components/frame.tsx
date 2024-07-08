@@ -9,7 +9,7 @@ export const Frame: React.FC<FrameProps> = ({ ...props }) => {
       {...props}
       className={clsx(
         "flex min-h-[8em] flex-wrap content-start gap-5px border border-[#5f636a] bg-[#1d242f] p-5px",
-        props.className
+        props.className,
       )}
     />
   );
