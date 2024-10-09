@@ -9,8 +9,8 @@ import { Description } from "./components/description";
 
 const escapeTag = (name: string) => `"${name.replaceAll('"', '\\"')}"`;
 
-const getRelatedTags = async (tags: string[]): Promise<string[]> => {
-  const url = new URL("https://derpibooru.org/api/v1/json/search/images");
+const getRelatedTags = async (tags: string[], selectedWebsite: string): Promise<string[]> => {
+  const url = new URL(`${selectedWebsite}/api/v1/json/search/images`);
   url.search = new URLSearchParams({
     q: clsx(
       tags.length && `(${tags.map((t) => escapeTag(t)).join(" || ")}),`,
@@ -46,8 +46,22 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const [tags, setTags] = useState<string[]>([]);
+  const [selectedWebsite, setSelectedWebsite] = useState<string>("https://derpibooru.org");
 
-  const handleAdd = (tag: string) => {
+  const websites = [
+    { name: "Derpibooru", url: "https://derpibooru.org" },
+    { name: "Ponybooru", url: "https://ponybooru.org" },
+    { name: "Twibooru", url: "https://twibooru.org" },
+    { name: "Ponepics", url: "https://ponerpics.org/" },
+    { name: "Furbooru", url: "https://furbooru.org" }
+  ];
+
+  const handleWebsiteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedWebsite(event.target.value);
+  };
+
+  const handleAdd = (tag?: string) => {
+    if(!tag) return;
     const newTags = tag
       .split(",")
       .map((t) => t.trim())
@@ -67,7 +81,7 @@ export default function Home() {
   const loadRelated = async () => {
     setLoading(true);
     try {
-      const data = await getRelatedTags(tags);
+      const data = await getRelatedTags(tags, selectedWebsite);
       setRelated(data);
       setError(undefined);
     } catch (e: any) {
@@ -92,6 +106,15 @@ export default function Home() {
       <Header className="mb-8" />
       <Description className="mb-6" />
 
+      <label htmlFor="website-select" className="block mb-2 text-[13px]">Choose a website:</label>
+      <select id="website-select" value={selectedWebsite} onChange={handleWebsiteChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        {websites.map(website => (
+          <option key={website.url} value={website.url}>
+            {website.name}
+          </option>
+        ))}
+      </select>
+
       <div className="mb-px mt-3 text-[13px]">Write your tags here:</div>
       <Frame>
         {tags.map((t) => (
@@ -102,6 +125,7 @@ export default function Home() {
           />
         ))}
         <TagInput
+          selectedWebsite={selectedWebsite}
           onAdd={handleAdd}
           onDeletePrevious={() => setTags(tags.slice(0, -1))}
         />

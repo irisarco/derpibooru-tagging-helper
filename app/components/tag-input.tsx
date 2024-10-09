@@ -10,14 +10,16 @@ import {
 export interface TagInputProps {
   onAdd: (tag: string) => void;
   onDeletePrevious?: () => void;
+  selectedWebsite: string;
 }
 
 export const TagInput: React.FC<TagInputProps> = ({
   onAdd,
   onDeletePrevious,
+  selectedWebsite
 }) => {
   const [query, setQuery] = useState("");
-  const suggestions = useAutocomplete(query);
+  const suggestions = useAutocomplete(query, selectedWebsite);
 
   return (
     <Combobox
