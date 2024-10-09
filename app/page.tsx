@@ -50,9 +50,6 @@ export default function Home() {
 
   const websites = [
     { name: "Derpibooru", url: "https://derpibooru.org" },
-    { name: "Ponybooru", url: "https://ponybooru.org" },
-    { name: "Twibooru", url: "https://twibooru.org" },
-    { name: "Ponepics", url: "https://ponerpics.org/" },
     { name: "Furbooru", url: "https://furbooru.org" }
   ];
 
