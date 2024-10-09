@@ -107,7 +107,7 @@ export default function Home() {
       <Description className="mb-6" />
 
       <label htmlFor="website-select" className="block mb-2 text-[13px]">Choose a website:</label>
-      <select id="website-select" value={selectedWebsite} onChange={handleWebsiteChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      <select id="website-select" value={selectedWebsite} onChange={handleWebsiteChange} className="border border-[#5f636a] bg-[#1d242f] text[#e0e0e0] text-sm hover:bg-[#313947] block w-full p-2.5">
         {websites.map(website => (
           <option key={website.url} value={website.url}>
             {website.name}

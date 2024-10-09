@@ -17,7 +17,9 @@ export const Description: React.FC<DescriptionProps> = ({ className }) => {
         <b>How to use: </b>
         Simply enter your tags and press &quot;Load related&quot; button and
         click on the tags you want to add. Repeat until you are satisfied with
-        the results. You can also paste tags copied from the site.
+        the results. You can also paste tags copied from the site. You can also
+        use the website dropdown to select a different philomena based image
+        board.
       </p>
       <p>
         <b>How it works: </b>
