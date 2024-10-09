@@ -1,64 +1,21 @@
 "use client";
-import clsx from "clsx";
 import { useState } from "react";
+import { Description } from "./components/description";
+import { Frame } from "./components/frame";
 import { Header } from "./components/header";
 import { Tag } from "./components/tag";
 import { TagInput } from "./components/tag-input";
-import { Frame } from "./components/frame";
-import { Description } from "./components/description";
-import type { WebsiteConfig } from "./components/types";
-
-const websites: WebsiteConfig[] = [
-  {
-    name: "Derpibooru",
-    url: "https://derpibooru.org",
-    filter: "56027",
-  },
-  {
-    name: "Furbooru",
-    url: "https://furbooru.org",
-    filter: "2",
-  },
-];
-
-const escapeTag = (name: string) => `"${name.replaceAll('"', '\\"')}"`;
+import { websites, type WebsiteConfig } from "./websites";
 
 const getRelatedTags = async (
   tags: string[],
   website: WebsiteConfig,
 ): Promise<string[]> => {
-  const url = new URL("/api/v1/json/search/images", website.url);
-  url.search = new URLSearchParams({
-    q: clsx(
-      tags.length && `(${tags.map((t) => escapeTag(t)).join(" || ")}),`,
-      // Default filter to exclude newly uploaded or bad images which are likely not well tagged.
-      // It probably should be customized per website at some point.
-      // It'll require more testing.
-      "score.gt:50, first_seen_at.lt:2 days ago",
-    ),
-    filter_id: website.filter,
-    sf: "_score",
-    per_page: "50",
-  }).toString();
-
-  const res = await fetch(url.toString());
-  const json = await res.json();
-  const images: { tags: string[] }[] = json.images;
-  const frequencies: Record<string, number> = {};
-  const initial = new Set(tags);
-
-  images
-    .flatMap((i) => i.tags)
-    .filter((t) => !initial.has(t))
-    .forEach((t) => {
-      frequencies[t] = (frequencies[t] || 0) + 1;
-    });
-
-  return Object.entries(frequencies)
-    .sort()
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 20)
-    .map(([n]) => n);
+  const url = new URL("/api/related-tags", window.location.origin);
+  url.searchParams.set("site", website.name);
+  url.searchParams.set("tags", JSON.stringify(tags));
+  const res = await fetch(url);
+  return res.json();
 };
 
 export default function Home() {
@@ -101,6 +58,7 @@ export default function Home() {
       setRelated(data);
       setError(undefined);
     } catch (e: any) {
+      console.error(e);
       setError(e);
       setRelated(undefined);
     }

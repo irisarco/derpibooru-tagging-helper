@@ -6,7 +6,7 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import type { WebsiteConfig } from "./types";
+import type { WebsiteConfig } from "../websites";
 
 export interface TagInputProps {
   onAdd: (tag: string) => void;
@@ -53,11 +53,11 @@ export const TagInput: React.FC<TagInputProps> = ({
         )}
         {suggestions.map((tag) => (
           <ComboboxOption
-            key={tag.name}
-            value={tag.name}
+            key={tag.value}
+            value={tag.value}
             className="cursor-pointer overflow-hidden p-5px ui-active:bg-[#e0e0e0] ui-active:text-[#546c99]"
           >
-            {tag.name} ({tag.imageCount})
+            {tag.label}
           </ComboboxOption>
         ))}
       </ComboboxOptions>

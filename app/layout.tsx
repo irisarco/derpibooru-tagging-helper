@@ -1,3 +1,4 @@
+import { QueryProvider } from "./components/query-provider";
 import "./globals.css";
 import PlausibleProvider from "next-plausible";
 
@@ -19,7 +20,9 @@ export default function RootLayout({
           trackOutboundLinks
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
