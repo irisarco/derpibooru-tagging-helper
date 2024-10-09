@@ -6,17 +6,37 @@ import { Tag } from "./components/tag";
 import { TagInput } from "./components/tag-input";
 import { Frame } from "./components/frame";
 import { Description } from "./components/description";
+import type { WebsiteConfig } from "./components/types";
+
+const websites: WebsiteConfig[] = [
+  {
+    name: "Derpibooru",
+    url: "https://derpibooru.org",
+    filter: "56027",
+  },
+  {
+    name: "Furbooru",
+    url: "https://furbooru.org",
+    filter: "2",
+  },
+];
 
 const escapeTag = (name: string) => `"${name.replaceAll('"', '\\"')}"`;
 
-const getRelatedTags = async (tags: string[]): Promise<string[]> => {
-  const url = new URL("https://derpibooru.org/api/v1/json/search/images");
+const getRelatedTags = async (
+  tags: string[],
+  website: WebsiteConfig,
+): Promise<string[]> => {
+  const url = new URL("/api/v1/json/search/images", website.url);
   url.search = new URLSearchParams({
     q: clsx(
       tags.length && `(${tags.map((t) => escapeTag(t)).join(" || ")}),`,
+      // Default filter to exclude newly uploaded or bad images which are likely not well tagged.
+      // It probably should be customized per website at some point.
+      // It'll require more testing.
       "score.gt:50, first_seen_at.lt:2 days ago",
     ),
-    filter_id: "56027", // Everything
+    filter_id: website.filter,
     sf: "_score",
     per_page: "50",
   }).toString();
@@ -46,8 +66,18 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
   const [tags, setTags] = useState<string[]>([]);
+  const [selectedWebsite, setSelectedWebsite] = useState(websites[0]);
 
-  const handleAdd = (tag: string) => {
+  const handleWebsiteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const website = websites.find((w) => w.url === event.target.value);
+    if (website) {
+      setSelectedWebsite(website);
+    }
+  };
+
+  const handleAdd = (tag?: string) => {
+    if (!tag) return;
+
     const newTags = tag
       .split(",")
       .map((t) => t.trim())
@@ -67,7 +97,7 @@ export default function Home() {
   const loadRelated = async () => {
     setLoading(true);
     try {
-      const data = await getRelatedTags(tags);
+      const data = await getRelatedTags(tags, selectedWebsite);
       setRelated(data);
       setError(undefined);
     } catch (e: any) {
@@ -92,6 +122,22 @@ export default function Home() {
       <Header className="mb-8" />
       <Description className="mb-6" />
 
+      <label htmlFor="website-select" className="mb-2 block text-[13px]">
+        Choose a website:
+      </label>
+      <select
+        id="website-select"
+        value={selectedWebsite.url}
+        onChange={handleWebsiteChange}
+        className="text[#e0e0e0] block w-full border border-[#5f636a] bg-[#1d242f] px-2.5 text-sm hover:bg-[#313947] focus:border-[#647493] focus:bg-[#313947] focus-visible:ring-0"
+      >
+        {websites.map((website) => (
+          <option key={website.url} value={website.url}>
+            {website.name}
+          </option>
+        ))}
+      </select>
+
       <div className="mb-px mt-3 text-[13px]">Write your tags here:</div>
       <Frame>
         {tags.map((t) => (
@@ -102,6 +148,7 @@ export default function Home() {
           />
         ))}
         <TagInput
+          website={selectedWebsite}
           onAdd={handleAdd}
           onDeletePrevious={() => setTags(tags.slice(0, -1))}
         />

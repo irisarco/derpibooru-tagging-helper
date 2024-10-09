@@ -6,18 +6,21 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
+import type { WebsiteConfig } from "./types";
 
 export interface TagInputProps {
   onAdd: (tag: string) => void;
   onDeletePrevious?: () => void;
+  website: WebsiteConfig;
 }
 
 export const TagInput: React.FC<TagInputProps> = ({
   onAdd,
   onDeletePrevious,
+  website,
 }) => {
   const [query, setQuery] = useState("");
-  const suggestions = useAutocomplete(query);
+  const suggestions = useAutocomplete(query, website);
 
   return (
     <Combobox
@@ -35,7 +38,7 @@ export const TagInput: React.FC<TagInputProps> = ({
     >
       <ComboboxInput
         placeholder="add a tag"
-        className="border border-[#5f636a] bg-[#272d38] p-5px text-sm leading-[inherit] placeholder:text-inherit placeholder:opacity-[54%] focus:border-[#647493] focus:bg-[#313947] focus:outline-none"
+        className="border border-[#5f636a] bg-[#272d38] p-5px text-sm leading-[inherit] placeholder:text-inherit placeholder:opacity-[54%] focus:border-[#647493] focus:bg-[#313947] focus:outline-none focus:ring-0"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
